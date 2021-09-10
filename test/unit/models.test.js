@@ -17,7 +17,7 @@ describe('Insere um novo produto ao BD', () => {
     quantity: 10,
   };
 
-  before(async () => {
+  beforeEach(async () => {
     const DBServer = new MongoMemoryServer();
     const URLMock = await DBServer.getUri();
 
@@ -31,7 +31,7 @@ describe('Insere um novo produto ao BD', () => {
     sinon.stub(mongoConnection, 'getConnection').resolves(connectionMock);
   });
 
-  after(() => {
+  afterAll(() => {
     mongoConnection.connection.restore();
   });
 
@@ -55,3 +55,5 @@ describe('Insere um novo produto ao BD', () => {
     });
   });
 });
+
+
