@@ -13,4 +13,4 @@ const connection = () => MongoClient.connect(MONGO_DB_URL, {
     useUnifiedTopology: true,
   }).then((conn) => conn.db(DB_NAME));
 
-module.exports = connection;
+module.exports = { connection };
