@@ -38,11 +38,7 @@ const create = async ({ name, quantity }) => {
   const isNotValidProduct = await isValid(name, quantity);
   if (isNotValidProduct) return isNotValidProduct;
 
-  const { id } = await productsModel.create({ name, quantity });
-
-  return {
-    id,
-  };
+  return productsModel.create({ name, quantity });
 };
 
 module.exports = {
