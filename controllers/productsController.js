@@ -30,6 +30,7 @@ const remove = async (req, res) => {
   if (result.err) { return res.status(422).json(result); }
   res.status(200).json(result);
 };
+
 module.exports = {
   create,
   getAll,
