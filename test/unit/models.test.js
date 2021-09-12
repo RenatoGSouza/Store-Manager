@@ -17,7 +17,7 @@ describe('Insere um novo produto ao BD', () => {
     quantity: 10,
   };
 
-  beforeEach(async () => {
+  before(async () => {
     const DBServer = new MongoMemoryServer();
     const URLMock = await DBServer.getUri();
 
@@ -28,10 +28,10 @@ describe('Insere um novo produto ao BD', () => {
       })
       .then((conn) => conn.db(DB_NAME));
     
-    sinon.stub(mongoConnection, 'getConnection').resolves(connectionMock);
+    sinon.stub(mongoConnection, 'connection').resolves(connectionMock);
   });
 
-  afterAll(() => {
+  after(() => {
     mongoConnection.connection.restore();
   });
 
@@ -50,7 +50,7 @@ describe('Insere um novo produto ao BD', () => {
 
     it('deve existir um product com o name cadastrado!', async () => {
       await productsModel.create(newProduct);
-      const productCreated = await connectionMock.collection('products').findOne({ name: newProduct.name });
+      const productCreated = await connectionMock.collection('products').findOne({name: newProduct.name});
       expect(productCreated).to.be.not.null;
     });
   });

@@ -1,32 +1,17 @@
 const { connection } = require('../models/connection');
+const productsModel = require('../models/productsModel');
 
-const errorLength = { 
-  err: {
-  message: '"name" length must be at least 5 characters long',
-  code: 'invalid_data', 
-  },
-};
+const nameLength = '"name" length must be at least 5 characters long';
 
-const productExist = {
-  err: { 
-    message: 'Product already exists', 
-    code: 'invalid_data', 
-  }, 
-};
+const productExist = 'Product already exists';
+ 
+const valueQuantityNotValid = '"quantity" must be larger than or equal to 1';
 
-const valueQuantityNotValid = {
-  err: { 
-    message: '"quantity" must be larger than or equal to 1', 
-    code: 'invalid_data', 
-  }, 
-};
+const typeQuantityNotValid = '"quantity" must be a number';
 
-const typeQuantityNotValid = {
-  err: { 
-    message: '"quantity" must be a number', 
-    code: 'invalid_data', 
-  }, 
-};
+const code = 'invalid_data';
+
+const erroMessage = (message) => ({ err: { message, code } });
 
 const validValueQuantity = (value) => ((value <= 0));
 const validTypeQuantity = (value) => (typeof value !== 'number');
@@ -39,16 +24,27 @@ const productExists = async (name) => {
   return false;
 };
 
-const isValidProduct = async (name, quantity) => {
+const isValid = async (name, quantity) => {
   switch (true) {
-    case (valueLengthIsValid(name, 5)): return errorLength;
-    case (validValueQuantity(quantity)): return valueQuantityNotValid;
-    case (validTypeQuantity(quantity)): return typeQuantityNotValid; 
-    case (await productExists(name)): return productExist;
+    case (valueLengthIsValid(name, 5)): return erroMessage(nameLength);
+    case (validValueQuantity(quantity)): return erroMessage(valueQuantityNotValid);
+    case (validTypeQuantity(quantity)): return erroMessage(typeQuantityNotValid);
+    case (await productExists(name)): return erroMessage(productExist);
     default: return false;
   }
 };
 
+const create = async ({ name, quantity }) => {
+  const isNotValidProduct = await isValid(name, quantity);
+  if (isNotValidProduct) return isNotValidProduct;
+
+  const { id } = await productsModel.create({ name, quantity });
+
+  return {
+    id,
+  };
+};
+
 module.exports = {
-  isValidProduct,
+  create,
 };
