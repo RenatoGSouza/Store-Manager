@@ -48,7 +48,7 @@ const remove = async (_id) => {
   }
   const product = await findById(_id);
   await mongoConnection.connection()
-  .then((db) => db.collection(PRODUCTS).deleteOne({ _id: new ObjectId(_id) }));
+  .then((db) => db.collection(PRODUCTS).findOneAndDeleteOne({ _id: new ObjectId(_id) }));
 
   if (!product) { return null; }
   return product;

@@ -64,4 +64,5 @@ module.exports = {
   findById,
   update,
   remove,
+  isValid,
 };
