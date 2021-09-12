@@ -46,8 +46,22 @@ const findById = async (id) => {
   if (!result) { return { err: { code: 'invalid_data', message: 'Wrong id format' } }; }
   return result;
 }; 
+
+const update = async (id, { name, quantity }) => {
+  const isNotValidProduct = await isValid(name, quantity);
+  if (isNotValidProduct) return isNotValidProduct;
+  return productsModel.update(id, name, quantity);
+};
+
+const remove = async (id) => {
+  const result = await productsModel.remove(id);
+  if (!result) { return { err: { code: 'invalid_data', message: 'Wrong id format' } }; }
+  return result;
+}; 
 module.exports = {
   create,
   getAll,
   findById,
+  update,
+  remove,
 };
