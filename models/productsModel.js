@@ -11,6 +11,10 @@ const create = async ({ name, quantity }) => {
   };
 };
 
+const findByName = (name) => mongoConnection.connection()
+  .then((db) => db.collection('products').findOne({ name }));
+
 module.exports = {
   create,
+  findByName,
 };

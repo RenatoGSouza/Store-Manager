@@ -1,4 +1,3 @@
-const { connection } = require('../models/connection');
 const productsModel = require('../models/productsModel');
 
 const nameLength = '"name" length must be at least 5 characters long';
@@ -18,9 +17,8 @@ const validTypeQuantity = (value) => (typeof value !== 'number');
 const valueLengthIsValid = (value, min) => ((!value) || (value.length < min));
 
 const productExists = async (name) => {
-  const { name: namedb } = await connection()
-    .then((db) => db.collection('products').findOne({ name })) || false;
-  if (namedb === name) { return true; } 
+  const { name: namedb } = await productsModel.findByName(name) || false;
+  if (namedb === name) { return true; }
   return false;
 };
 
