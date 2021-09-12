@@ -3,6 +3,8 @@ const productsController = require('../controllers/productsController');
 
 const router = Router();
 
-router.post('/products', productsController.create);
+router.get('/:id', productsController.findById);
+router.post('/', productsController.create);
+router.get('/', productsController.getAll);
 
 module.exports = router;

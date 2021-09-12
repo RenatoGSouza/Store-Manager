@@ -28,7 +28,6 @@ describe('Ao chamar o productController de create', () => {
 
     it('é chamado o status com o código 422', async () => {
       await productsController.create(request, response);
-      console.log(response.status.calledWith(201));
       expect(response.status.calledWith(422)).to.be.equal(true);
     });
 
