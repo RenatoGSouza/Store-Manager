@@ -33,10 +33,17 @@ const update = async (id, itensSold) => {
   return salesModel.update(id, itensSold);
 }; 
 
+const remove = async (id) => {
+  const result = await salesModel.remove(id);
+  if (!result) { return { err: { code: 'invalid_data', message: 'Wrong sale ID format' } }; }
+  return result;
+}; 
+
 const getAll = async () => salesModel.getAll();
 module.exports = {
   create,
   getAll,
   findById,
   update,
+  remove,
 };

@@ -9,7 +9,6 @@ const create = async (req, res) => {
 
 const getAll = async (_req, res) => {
   const result = await salesService.getAll();
-  console.log(result);
   res.status(StatusCodes.OK).json({ sales: result });
 };
 
@@ -27,9 +26,17 @@ const update = async (req, res) => {
   res.status(StatusCodes.OK).json(result);
 };
 
+const remove = async (req, res) => {
+  const { id } = req.params;
+  const result = await salesService.remove(id);
+  if (result.err) { return res.status(StatusCodes.UNPROCESSABLE_ENTITY).json(result); }
+  res.status(StatusCodes.OK).json(result);
+}; 
+
 module.exports = {
   create,
   getAll,
   findById,
   update,
+  remove,
 };
