@@ -20,8 +20,16 @@ const findById = async (req, res) => {
   res.status(StatusCodes.OK).json(result);
 };
 
+const update = async (req, res) => {
+  const { id } = req.params;
+  const result = await salesService.update(id, req.body);
+  if (result.err) { return res.status(StatusCodes.UNPROCESSABLE_ENTITY).json(result); }
+  res.status(StatusCodes.OK).json(result);
+};
+
 module.exports = {
   create,
   getAll,
   findById,
+  update,
 };

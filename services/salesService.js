@@ -16,7 +16,6 @@ const isNotValid = (sales) => {
 
 const create = async (sales) => {
   const salesIsNotValid = isNotValid(sales);
-  console.log(salesIsNotValid);
   if (salesIsNotValid) { return salesIsNotValid; }
 
   return salesModel.create(sales);
@@ -28,9 +27,16 @@ const findById = async (id) => {
   return result;
 }; 
 
+const update = async (id, itensSold) => {
+  const salesIsNotValid = isNotValid(itensSold);
+  if (salesIsNotValid) { return salesIsNotValid; }
+  return salesModel.update(id, itensSold);
+}; 
+
 const getAll = async () => salesModel.getAll();
 module.exports = {
   create,
   getAll,
   findById,
+  update,
 };
