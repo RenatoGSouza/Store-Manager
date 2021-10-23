@@ -1,5 +1,7 @@
 const salesModel = require('../models/salesModel');
 
+const productsModel = require('../models/productsModel');
+
 const quantitySmallZero = (sales) => (sales.some(({ quantity }) => (quantity <= 0)));
 const quantityIsString = (sales) => (sales.some(({ quantity }) => (typeof quantity === 'string')));
 
@@ -14,11 +16,34 @@ const isNotValid = (sales) => {
   }
 };
 
+const ERROR_STOCK = { 
+  err: { 
+    code: 'stock_problem',
+    message: 'Such amount is not permitted to sell',
+  }, 
+};
+
+const validateQuantity = (itensSold) => Promise.all(
+  itensSold.map(async ({ productId, quantity }) => {
+   const product = await productsModel.findById(productId);
+   const sumQauntity = product.quantity - quantity;
+   if (sumQauntity < 0) {
+     return ERROR_STOCK;
+   }
+   return false;
+  }),
+);
+
 const create = async (sales) => {
   const salesIsNotValid = isNotValid(sales);
   if (salesIsNotValid) { return salesIsNotValid; }
 
-  return salesModel.create(sales);
+  const [quantityValid] = await validateQuantity(sales);
+  if (quantityValid) { return quantityValid; }
+
+  const result = await salesModel.create(sales);
+  if (result.err) { return { problem: true, result }; }
+  return result; 
 };
 
 const findById = async (id) => {

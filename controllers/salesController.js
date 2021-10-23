@@ -3,7 +3,12 @@ const salesService = require('../services/salesService');
 
 const create = async (req, res) => {
   const result = await salesService.create(req.body);
-  if (result.err) { return res.status(StatusCodes.UNPROCESSABLE_ENTITY).json(result); }
+  if (result.err) { 
+    if (result.err.message === 'Such amount is not permitted to sell') {
+      return res.status(StatusCodes.NOT_FOUND).json(result);
+    }
+    return res.status(StatusCodes.UNPROCESSABLE_ENTITY).json(result); 
+  }
   res.status(StatusCodes.OK).json(result);
 }; 
 

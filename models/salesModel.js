@@ -5,17 +5,15 @@ const productsModel = require('./productsModel');
 const SALES = 'sales';
 
 const updateQuantityOfProduct = (itensSold, incOrDes) => {
-  itensSold.forEach(async ({ productId, quantity }) => {
+  itensSold.map(async ({ productId, quantity }) => {
     let newQuantity;
     const { _id, name, quantity: quantityProduct } = await productsModel.findById(productId);
     if (incOrDes === 'des') {
       newQuantity = quantityProduct - quantity;
-      await productsModel.update(_id, name, newQuantity);
-    } 
-    if (incOrDes === 'inc') {
+    } else {
       newQuantity = quantityProduct + quantity;
-      await productsModel.update(_id, name, newQuantity);
     }
+    await productsModel.update(_id, name, newQuantity);
   });
 };
 
