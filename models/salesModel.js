@@ -1,9 +1,26 @@
 const { ObjectId } = require('mongodb');
 const mongoConnection = require('./connection');
+const productsModel = require('./productsModel');
 
 const SALES = 'sales';
 
+const updateQuantityOfProduct = (itensSold, incOrDes) => {
+  itensSold.forEach(async ({ productId, quantity }) => {
+    let newQuantity;
+    const { _id, name, quantity: quantityProduct } = await productsModel.findById(productId);
+    if (incOrDes === 'des') {
+      newQuantity = quantityProduct - quantity;
+      await productsModel.update(_id, name, newQuantity);
+    } 
+    if (incOrDes === 'inc') {
+      newQuantity = quantityProduct + quantity;
+      await productsModel.update(_id, name, newQuantity);
+    }
+  });
+};
+
 const create = async (itensSold) => {
+  updateQuantityOfProduct(itensSold, 'des');
   const { insertedId } = await mongoConnection.connection()
     .then((db) => db.collection(SALES).insertOne({ itensSold }));
   return {
@@ -26,9 +43,7 @@ const findById = async (id) => {
 }; 
 
 const update = async (_id, itensSold) => {
-  if (!ObjectId.isValid(_id)) {
-    return null;
-  }
+  if (!ObjectId.isValid(_id)) { return null; }
   const sale = await mongoConnection.connection()
   .then((db) => db.collection(SALES)
   .updateOne({ _id: new ObjectId(_id) }, { $set: { itensSold } }));
@@ -40,13 +55,11 @@ const update = async (_id, itensSold) => {
 };
 
 const remove = async (_id) => {
-  if (!ObjectId.isValid(_id)) {
-    return null;
-  }
+  if (!ObjectId.isValid(_id)) { return null; }
   const sale = await findById(_id);
+  updateQuantityOfProduct(sale.itensSold, 'inc');
   await mongoConnection.connection()
   .then((db) => db.collection(SALES).deleteOne({ _id: new ObjectId(_id) }));
-
   if (!sale) { return null; }
   return sale;
 };
