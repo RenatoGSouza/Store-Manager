@@ -104,6 +104,12 @@ describe('Faz validações das funções de requisição ao banco de dados', () 
 
     it('Retorna uma erro caso não encontre a venda pelo Id', async () => {
       const response = await salesModel.findById('idAleatorio');
+      const updateSale = {
+        "id": "5f3ff849d94d4a17da707008",
+        "quantity": 10
+      }
+      const response2 = await salesModel.findById(updateSale.id);
+      expect(response2).to.be.a.null;
       expect(response).to.be.null
     });
 
@@ -123,13 +129,23 @@ describe('Faz validações das funções de requisição ao banco de dados', () 
       expect(response.itensSold[0].quantity).to.be.eq(10);
     });
 
+    it('Retornar NULL quando passa um id invalido no saleModels update', async () => {
+      const response2 = await salesModel.update('updateSale.id');
+      expect(response2).to.be.a.null;
+    });
+
     it('Remove uma venda pelo Id e retona a venda deletada', async () => {
       const createSale = await salesModel.create(newSale);
-      const response = await salesModel.remove(createSale._id);
+      const response = await salesModel.remove(createSale._id, {iten:'invalid'});
       expect(response).to.be.a('object');
       expect(response).to.be.have.a.property('itensSold');
       expect(response).to.be.have.a.property('_id');
       expect(response.itensSold).to.be.a('array');
+    });
+
+    it('Retorna NULL ao passar id invalido para deletar uma venda', async () => {
+      const response = await salesModel.remove('createSale._id');
+      expect(response).to.be.a.null;
     });
 
     it('Atualiza a quantidade do produto quando uma venda é feita ou deletada', async () => {

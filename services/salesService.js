@@ -26,8 +26,8 @@ const ERROR_STOCK = {
 const validateQuantity = (itensSold) => Promise.all(
   itensSold.map(async ({ productId, quantity }) => {
    const product = await productsModel.findById(productId);
-   const sumQauntity = product.quantity - quantity;
-   if (sumQauntity < 0) {
+   const sumQuantity = product.quantity - quantity;
+   if (sumQuantity < 0) {
      return ERROR_STOCK;
    }
    return false;

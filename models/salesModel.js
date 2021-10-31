@@ -41,10 +41,9 @@ const findById = async (id) => {
 
 const update = async (_id, itensSold) => {
   if (!ObjectId.isValid(_id)) { return null; }
-  const sale = await mongoConnection.connection()
+  await mongoConnection.connection()
   .then((db) => db.collection(SALES)
   .updateOne({ _id: new ObjectId(_id) }, { $set: { itensSold } }));
-  if (!sale) { return null; }
   return {
     _id,
     itensSold,
@@ -57,7 +56,6 @@ const remove = async (_id) => {
   updateQuantityOfProduct(sale.itensSold, 'inc');
   await mongoConnection.connection()
   .then((db) => db.collection(SALES).deleteOne({ _id: new ObjectId(_id) }));
-  if (!sale) { return null; }
   return sale;
 };
 

@@ -65,4 +65,5 @@ module.exports = {
   update,
   remove,
   isValid,
+  productExists,
 };
