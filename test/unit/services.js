@@ -32,21 +32,13 @@ describe('Insere um novo Product no BD', () => {
       expect(response).to.have.a.property('err');
     });
 
-    it('deve retornar um erro se o product já existir', async () => {
-      const newProduct = {
-        name: 'Produto Silva',
-        quantity: 10,
-      };
-      const response = await productsService.create(newProduct);
-
-      expect(response.err.message).to.be.equal('Product already exists');
-    });
 
     it('Se o tamanho do name de product for menor que 5 characters',async  () => {
       const newProduct = {
         name: 'Prod',
         quantity: 10,
       };
+      
       const response = await productsService.create(newProduct);
 
       expect(response.err.message).to.be.equal('"name" length must be at least 5 characters long');
@@ -54,22 +46,22 @@ describe('Insere um novo Product no BD', () => {
   
   });
 
-  describe('quando é inserido com sucesso', () => {
-    const newProduct = {
-      name: 'Produto silvestre',
-      quantity: 10,
-    };    
+  // describe('quando é inserido com sucesso', () => {
+  //   const newProduct = {
+  //     name: 'Produto silvestre',
+  //     quantity: 10,
+  //   };    
 
-    it('retorna um objeto', async () => {
-      const response = await productsService.create(newProduct);
-      expect(response).to.be.a('object');
-    });
+  //   it('retorna um objeto', async () => {
+  //     const response = await productsService.create(newProduct);
+  //     expect(response).to.be.a('object');
+  //   });
 
-    it('O novo product inserido possui a propriedade "id"', async () => {
-      const response = await productsService.create(newProduct);
-      expect(response).to.have.a.property('id');
-    });
+  //   it('O novo product inserido possui a propriedade "id"', async () => {
+  //     const response = await productsService.create(newProduct);
+  //     expect(response).to.have.a.property('id');
+  //   });
 
     
-  });
+  // });
 });

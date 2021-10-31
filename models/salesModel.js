@@ -4,8 +4,8 @@ const productsModel = require('./productsModel');
 
 const SALES = 'sales';
 
-const updateQuantityOfProduct = (itensSold, incOrDes) => {
-  itensSold.map(async ({ productId, quantity }) => {
+const updateQuantityOfProduct = (itensSold, incOrDes) => itensSold
+  .map(async ({ productId, quantity }) => {
     let newQuantity;
     const { _id, name, quantity: quantityProduct } = await productsModel.findById(productId);
     if (incOrDes === 'des') {
@@ -13,9 +13,8 @@ const updateQuantityOfProduct = (itensSold, incOrDes) => {
     } else {
       newQuantity = quantityProduct + quantity;
     }
-    await productsModel.update(_id, name, newQuantity);
+    return productsModel.update(_id, name, newQuantity);
   });
-};
 
 const create = async (itensSold) => {
   updateQuantityOfProduct(itensSold, 'des');
@@ -68,4 +67,5 @@ module.exports = {
   findById,
   update,
   remove,
+  updateQuantityOfProduct,
 };
